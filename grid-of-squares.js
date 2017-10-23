@@ -60,8 +60,8 @@ function shapeGeneratorEvaluate(params, callback)
   var height = 5;
     var innerDiameterPercent = params["innerDiameterPercent"];
     var wallWidth = (scale - (scale * (innerDiameterPercent/100.0)))/2;
-    var owidth = 2.544;
-    var iwidth = 2.54 - wallWidth - wallWidth;
+    var owidth = scale-0.002;
+    var iwidth = (scale-0.0044) - wallWidth - wallWidth;
     var halfowidth = owidth/2;
     var halfiwidth = iwidth / 2;
     var osketch = Conversions.toSketch2DFromSVG(svg0+'<rect x="'+0+'" y="'+0+'" rx="0" ry="0" width="'+owidth+'" height="'+owidth+'"/>'+svg1);
