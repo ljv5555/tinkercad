@@ -32,6 +32,7 @@ var pa = null;
  
 
 params = [
+  { "id": "scale", "displayName": "scale", "type": "length", "default": 10, "rangeMin": 0, "rangeMax": 200 },    
   { "id": "innerDiameterPercent", "displayName": "size of hole (as a percent of 2.55mm)", "type": "length", "default": 60, "rangeMin": 0, "rangeMax": 200 },    
   { "id": "rows", "displayName": "rows", "type": "int", "default": 2 },    
   { "id": "columns", "displayName": "columns", "type": "int", "default": 2 },
@@ -46,6 +47,7 @@ params = [
 
 function shapeGeneratorEvaluate(params, callback)
 {
+  var scale = params["scale"];
   var translateAndCloneMesh=function(mesh,x,y,z){
       var rtn = mesh.clone();
       var move = new Matrix3D();
@@ -55,17 +57,17 @@ function shapeGeneratorEvaluate(params, callback)
   };
   var svg0 =       '<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>'+'<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'+'<svg xmlns="http://www.w3.org/2000/svg" version="1.1">';
   var svg1 = '</svg>';
-  var height = 2.55;
+  var height = 5;
     var innerDiameterPercent = params["innerDiameterPercent"];
-    var wallWidth = (2.55 - (2.55 * (innerDiameterPercent/100.0)))/2;
+    var wallWidth = (scale - (scale * (innerDiameterPercent/100.0)))/2;
     var owidth = 2.544;
     var iwidth = 2.54 - wallWidth - wallWidth;
     var halfowidth = owidth/2;
     var halfiwidth = iwidth / 2;
     var osketch = Conversions.toSketch2DFromSVG(svg0+'<rect x="'+0+'" y="'+0+'" rx="0" ry="0" width="'+owidth+'" height="'+owidth+'"/>'+svg1);
-    var obox = Solid.extrude(osketch,2.55).mesh;
+    var obox = Solid.extrude(osketch,scale).mesh;
     var isketch = Conversions.toSketch2DFromSVG(svg0+'<rect x="'+wallWidth+'" y="'+wallWidth+'" rx="0" ry="0" width="'+iwidth+'" height="'+iwidth+'"/>'+svg1);
-    var ibox = Solid.extrude(isketch,2.55).mesh;
+    var ibox = Solid.extrude(isketch,scale).mesh;
     var i=0;
     var j = 0;
     var k = 0;
@@ -81,10 +83,10 @@ function shapeGeneratorEvaluate(params, callback)
       {
         if(params["holesOnly"]=="false")
         {
-          noboxes.push(translateAndCloneMesh(obox,2.55*i,2.55*j,2.551*k));
-          niboxes.push(translateAndCloneMesh(ibox,2.55*i,2.55*j,2.551*k));
+          noboxes.push(translateAndCloneMesh(obox,scale*i,scale*j,(scale+0.001)*k));
+          niboxes.push(translateAndCloneMesh(ibox,scale*i,scale*j,(scale+0.001)*k));
         }
-        else{  noboxes.push(translateAndCloneMesh(ibox,2.55*i,2.55*j,2.551*k));  }
+        else{  noboxes.push(translateAndCloneMesh(ibox,scale*i,scale*j,(scale+0.001)*k));  }
     }
       htsi++;
       if( htsi >= hts.length ){ 
